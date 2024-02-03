@@ -35,60 +35,59 @@ class Handler extends ExceptionHandler
     {
     }
 
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
-        if ($exception instanceof HttpException) {
-            $statusCode = $exception->getStatusCode();
+        if ($e instanceof HttpException) {
+            $statusCode = $e->getStatusCode();
             $message = ResponseMain::$statusTexts[$statusCode];
 
             return Response::message($message)
                 ->send($statusCode);
         }
 
-        if ($exception instanceof ModelNotFoundException) {
-            $model = strtolower(class_basename($exception->getModel()));
+        if ($e instanceof ModelNotFoundException) {
             return Response::message('global.errors.not_found')
                 ->send(ResponseMain::HTTP_NOT_FOUND);
         }
 
-        if ($exception instanceof BadRequestException) {
-            return Response::message($exception->getMessage())
+        if ($e instanceof BadRequestException) {
+            return Response::message($e->getMessage())
                 ->send(ResponseMain::HTTP_BAD_REQUEST);
         }
 
-        if ($exception instanceof AuthorizationException) {
-            return Response::message($exception->getMessage())
+        if ($e instanceof AuthorizationException) {
+            return Response::message($e->getMessage())
                 ->send(ResponseMain::HTTP_FORBIDDEN);
         }
 
-        if ($exception instanceof UnauthorizedException) {
-            return Response::message($exception->getMessage())
+        if ($e instanceof UnauthorizedException) {
+            return Response::message($e->getMessage())
                 ->send(ResponseMain::HTTP_FORBIDDEN);
         }
 
-        if ($exception instanceof AuthenticationException) {
-            return Response::message($exception->getMessage())
+        if ($e instanceof AuthenticationException) {
+            return Response::message($e->getMessage())
                 ->send(ResponseMain::HTTP_UNAUTHORIZED);
         }
 
-        if ($exception instanceof ValidationException) {
-            $errors = $exception->validator->errors()->messages();
+        if ($e instanceof ValidationException) {
+            $errors = $e->validator->errors()->messages();
 
             return Response::errors($errors)
-                ->message($exception->getMessage())
+                ->message($e->getMessage())
                 ->send(ResponseMain::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if ($exception instanceof ClientException) {
-            $errors = $exception->getResponse()->getBody();
-            $code = $exception->getCode();
+        if ($e instanceof ClientException) {
+            $errors = $e->getResponse()->getBody();
+            $code = $e->getCode();
 
             return Response::errors($errors)
                 ->send($code);
         }
 
         if (env('APP_DEBUG', false)) {
-            return parent::render($request, $exception);
+            return parent::render($request, $e);
         }
 
         return Response::message('Unexpected Error , try later please')
