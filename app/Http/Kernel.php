@@ -67,6 +67,5 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'gateway.service.exist' => GatewayServiceExist::class,
-        'gateway.service.authentication' => GatewayServiceAuthentication::class,
     ];
 }

@@ -3,20 +3,39 @@
 namespace App\Services;
 
 
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+
 class GatewayService
 {
-    public string $url;
-    public int $timeout;
-    public int $port;
+    public static string $url;
+    public static ?string $timeout;
+    public static ?string $port;
+    public static bool $exists = false;
 
     /**
-     * get url
-     *
-     * @return string
+     * service
+     * @param string $service
+     * @return GatewayService
      */
+    public static function service(string $service): GatewayService
+    {
+        $service = config('gateway.services.'.$service);
+
+        if ( ! $service) {
+            throw new BadRequestException('service is not found');
+        }
+
+        static::$exists = true;
+        static::$url = $service['url'];
+        static::$port = $service['port'] ?? null;
+        static::$timeout = $service['timeout'] ?? null;
+
+        return new self();
+    }
+
     public function getUrl(): string
     {
-        return $this->url;
+        return static::$url;
     }
 
     /**
@@ -26,7 +45,16 @@ class GatewayService
      */
     public function getTimeout(): int
     {
-        return $this->timeout;
+        return static::$timeout;
+    }
+
+    /**
+     * get port
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return static::$exists;
     }
 
     /**
@@ -35,7 +63,7 @@ class GatewayService
      */
     public function getPort(): int
     {
-        return $this->port;
+        return static::$port;
     }
 
     /**
@@ -45,6 +73,6 @@ class GatewayService
      */
     public function getFullUrl(): string
     {
-        return $this->getUrl() . ':' . $this->getPort();
+        return $this->getUrl().':'.$this->getPort();
     }
 }

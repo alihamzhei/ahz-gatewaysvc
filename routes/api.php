@@ -20,5 +20,4 @@ Route::any('{service}/{endpoint}', [GatewayController::class, 'gateway'])
     ->where('endpoint', '.*')
     ->middleware([
         'gateway.service.exist',
-        'gateway.service.authentication',
     ]);
