@@ -14,7 +14,7 @@ return [
         ],
         'todosvc' => [
             'url' => 'http://127.0.0.1',
-            'port' => 8002,
+            'port' => 8000,
             'timeout' => 10,
         ],
     ],

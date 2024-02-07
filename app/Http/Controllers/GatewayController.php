@@ -20,8 +20,7 @@ class GatewayController extends Controller
         $response = Http::baseUrl($serviceConfig->getFullUrl())
             ->timeout($serviceConfig->getTimeout())
             ->withHeaders($request->headers->all('Authentication'))
-            ->send($request->getMethod(), $endpoint, $request->all());
-
+            ->{strtolower($request->getMethod())}($endpoint, $request->all());
 
         return response($response->body(), $response->status())
             ->header('Content-Type', $response->header('Content-Type'));

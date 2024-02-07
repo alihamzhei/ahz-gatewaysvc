@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Facades\Response as ResponseService;
-use App\Providers\Gateway\Repository\GatewayConfigRepository;
 use App\Services\GatewayService;
 use Illuminate\Http\Request;
 use Closure;
