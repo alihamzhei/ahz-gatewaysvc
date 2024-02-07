@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Facades\Response as ResponseService;
 use App\Providers\Gateway\Repository\GatewayConfigRepository;
 use App\Services\GatewayService;
 use Illuminate\Http\Request;
@@ -28,13 +29,8 @@ class GatewayServiceExist
         $service = $request->route()->parameter('service');
 
         if (!GatewayService::service($service)->exists()) {
-            return new Response([
-                'status' => 'ERROR',
-                'result' => [
-                    'message' => 'The service could not be found.',
-                    'service' => $service
-                ]
-            ], Response::HTTP_NOT_FOUND);
+            return ResponseService::message('The service could not be found.')
+                                    ->send(Response::HTTP_NOT_FOUND);
         }
 
         return $next($request);
