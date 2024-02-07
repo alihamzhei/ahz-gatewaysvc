@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    dd(\App\Services\GatewayService::service('authsvc')->getUrl());
+    dd(\App\Services\GatewayService::service('authsvc')->getPort());
 
     return view('welcome');
 });
